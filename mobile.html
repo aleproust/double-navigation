@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 15px Helvetica, Arial; }
+      #interface {width:200px;margin:10px auto}
+      input {display: block;margin:10px 0px 5px 0px;width:100%;font: 20px Helvetica, Arial;}
+      
+    </style>
+  </head>
+  <body>
+    <div id="interface">
+         <div id="message">Non Connecté</div>
+         <input type="text" value="" id="nom" placeholder="Nom" />
+         <input type="text" value="" id="prenom" placeholder="Prénom" />
+         
+    </div>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var QueryString = function () {
+        // This function is anonymous, is executed immediately and 
+        // the return value is assigned to QueryString!
+        var query_string = {};
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+                // If first entry with this name
+            if (typeof query_string[pair[0]] === "undefined") {
+            query_string[pair[0]] = decodeURIComponent(pair[1]);
+                // If second entry with this name
+            } else if (typeof query_string[pair[0]] === "string") {
+            var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+            query_string[pair[0]] = arr;
+                // If third or later entry with this name
+            } else {
+            query_string[pair[0]].push(decodeURIComponent(pair[1]));
+            }
+        } 
+            return query_string;
+        }();
+       
+        
+        
+        
+      var socket = io(); 
+      socket.on('connect', function () { socket.emit('mobile-attach',QueryString.qr); }); 
+      socket.on('mobile-attach-success', function(){ 
+          $('#message').html("Connecté !");
+       });
+       
+       $("#nom").keyup(function() {
+          sendInfo(); 
+       });
+       $("#prenom").keyup(function() {
+          sendInfo(); 
+       });
+       
+       function sendInfo() {
+          socket.emit('mobile-infos',{
+              prenom: $("#prenom").val(),
+              nom: $("#nom").val()
+          }); 
+       }
+       
+       
+    </script>
+  </body>
+</html>

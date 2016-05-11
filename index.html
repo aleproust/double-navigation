@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Tv</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      #qr {
+          width:400px;
+          height: 400px;
+          background-color:white;
+          margin:10px auto;
+      }
+      #interface {
+          width:400px;
+          height: 400px;
+          background-color:white;
+          margin:10px auto;
+          display: none;
+      }
+      p {
+         font: 20px Helvetica, Arial;
+         color:gray; 
+      }
+    </style>
+  </head>
+  <body>
+    <div id="qr"></div>
+    <div id="interface">
+        <h1>Nom</h1>
+        <p id="nom">&nbsp;</p>
+        <h1>Prénom</h1>
+        <p id="prenom">&nbsp;</p>
+    </div>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io(); 
+      socket.on('connect', function () { socket.emit('tv-get-qr'); }); 
+      socket.on('tv-receive-qr', function(url){ 
+          console.log("tv-receive-qr");
+          console.log(url);
+          $('#qr').html('<img src="https://chart.googleapis.com/chart?cht=qr&chl='+encodeURIComponent(url)+'d&choe=UTF-8&chs=400x400" />');
+       });
+       // Success Attach
+       socket.on('tv-attach-success', function(){ 
+           console.log("tv-attach-success");
+           $('#qr').hide();
+           $('#interface').show();
+       });
+       // Infos
+       socket.on('tv-infos', function(infos){ 
+           console.log("tv-infos");
+           console.log(infos);
+           $('#nom').html(infos.nom);
+           $('#prenom').html(infos.prenom);
+       });
+    </script>
+  </body>
+</html>

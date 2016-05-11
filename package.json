@@ -1,0 +1,24 @@
+{
+  "name": "double-navigation",
+  "version": "1.0.0",
+  "description": "Double navigation mobile-tv",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbazureau/double-navigation.git"
+  },
+  "author": "Ced",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cbazureau/double-navigation/issues"
+  },
+  "homepage": "https://github.com/cbazureau/double-navigation#readme",
+  "dependencies": {
+    "socket.io": "^1.4.5",
+    "express": "4.10.2"
+  }
+}
