@@ -5,32 +5,57 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
+      .step {
+          width:600px;
+          height: 400px;
+          background-color:white;
+          margin:10px auto;
+      }
       #qr {
           width:400px;
           height: 400px;
           background-color:white;
           margin:10px auto;
       }
-      #interface {
-          width:400px;
-          height: 400px;
-          background-color:white;
-          margin:10px auto;
-          display: none;
-      }
+      #step1 {display: block;}
+      #step2 {display: none;}
+      #step3 {display: none;}
       p {
          font: 20px Helvetica, Arial;
-         color:gray; 
+         color:gray;
+         margin-top:10px;
+         text-align: justify; 
+         margin-bottom:10px;
+      }
+      .virtual-input {
+          background-color:#DDD;
+          padding:4px;
+          margin:10px;
+          width:350px;
+      }
+      h3 {
+          margin: 5px 0px;
       }
     </style>
   </head>
   <body>
-    <div id="qr"></div>
-    <div id="interface">
-        <h1>Nom</h1>
-        <p id="nom">&nbsp;</p>
-        <h1>Prénom</h1>
-        <p id="prenom">&nbsp;</p>
+    <div id="step1" class="step">
+        <h1>Démonstration de double navigation TV/Mobile</h1>
+        <p>Cet écran est l'écran affiché sur l'écran de télévision.</p>
+        <div id="qr"></div>
+        <p>Veuillez scanner ce QR code avec votre mobile pour effectuer l'appairage de votre mobile et de votre télévision.</p>
+    </div>
+    <div id="step2" class="step">
+        <h1>Appairage TV/mobile effectué</h1>
+        <p>Veuillez saisir votre nom/prénom sur votre mobile</p>
+        <h3>Nom</h3>
+        <p id="nom" class="virtual-input">&nbsp;</p>
+        <h3>Prénom</h3>
+        <p id="prenom" class="virtual-input">&nbsp;</p>
+    </div>
+    <div id="step3" class="step">
+        <h1>Fin de parcours</h1>
+        <p>Votre parcours s'est déroulé correctement.</p>
     </div>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -45,15 +70,23 @@
        // Success Attach
        socket.on('tv-attach-success', function(){ 
            console.log("tv-attach-success");
-           $('#qr').hide();
-           $('#interface').show();
+           $('.step').hide();
+           $('#step2').show();
        });
        // Infos
        socket.on('tv-infos', function(infos){ 
            console.log("tv-infos");
            console.log(infos);
-           $('#nom').html(infos.nom);
-           $('#prenom').html(infos.prenom);
+           if(infos.nom && infos.nom!="") $('#nom').html(infos.nom);
+           else $('#nom').html("&nbsp;");
+           if(infos.prenom && infos.prenom!="") $('#prenom').html(infos.prenom);
+           else $('#prenom').html("&nbsp;");
+       });
+       // Fin
+       socket.on('tv-end', function(){ 
+           console.log("tv-end");
+           $('.step').hide();
+           $('#step3').show();
        });
     </script>
   </body>

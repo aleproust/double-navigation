@@ -6,17 +6,38 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 15px Helvetica, Arial; }
-      #interface {width:200px;margin:10px auto}
-      input {display: block;margin:10px 0px 5px 0px;width:100%;font: 20px Helvetica, Arial;}
+      .step {width:200px;margin:10px auto}
+      #interface {display: block}
+      #end {display: none}
+      input {display: block;margin:10px 0px 5px 0px;width:100%;font: 20px Helvetica, Arial;padding:5px;border:1px solid gray;}
+      button {
+          background-color:cornflowerblue;
+          width:100px;
+          color:white;
+          padding:5px;
+          font: 20px Helvetica, Arial;
+          border:1px solid cornflowerblue;
+          margin-top:10px;
+      }
+      h1 {
+          font: 20px Helvetica, Arial;
+          font-weight: bold;
+          margin-bottom:10px;
+      }
       
     </style>
   </head>
   <body>
-    <div id="interface">
-         <div id="message">Non Connecté</div>
+    <div id="interface" class="step">
+         <h1 id="message">Non Connecté</h1>
          <input type="text" value="" id="nom" placeholder="Nom" />
          <input type="text" value="" id="prenom" placeholder="Prénom" />
+         <button id="validation">Valider</button>
          
+    </div>
+    <div id="end" class="step">
+         <h1>Fin de parcours</h1>
+         <p>Votre parcours s'est déroulé correctement.</p>
     </div>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -50,7 +71,7 @@
       var socket = io(); 
       socket.on('connect', function () { socket.emit('mobile-attach',QueryString.qr); }); 
       socket.on('mobile-attach-success', function(){ 
-          $('#message').html("Connecté !");
+          $('#message').html("Appairage TV/mobile effectué");
        });
        
        $("#nom").keyup(function() {
@@ -59,12 +80,20 @@
        $("#prenom").keyup(function() {
           sendInfo(); 
        });
+       $("#validation").click(function() {
+          sendEnd(); 
+          $("#interface").hide();
+          $("#end").show();
+       });
        
        function sendInfo() {
           socket.emit('mobile-infos',{
               prenom: $("#prenom").val(),
               nom: $("#nom").val()
           }); 
+       }
+       function sendEnd() {
+          socket.emit('mobile-end'); 
        }
        
        

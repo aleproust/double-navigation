@@ -46,6 +46,14 @@ io.on('connection', function(socket){
       }
   });
   
+  socket.on('mobile-end', function(){
+      for(var i=0;i<connections.length;i++) {
+         if(socket.id==connections[i].socket_mobile) { 
+            io.sockets.connected[connections[i].socket_tv].emit("tv-end"); 
+         }
+      }
+  });
+  
   socket.on('mobile-attach', function(qr){
       console.log("QR :"+qr);
       
