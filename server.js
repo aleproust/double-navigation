@@ -1,4 +1,4 @@
-var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8082
+var server_port = process.env.PORT || 8082
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 var server_baseurl = (process.env.OPENSHIFT_NODEJS_IP) ? "http://doublenav-lebeaujeu.rhcloud.com": "http://192.168.1.44:8082";
 var app = require('express')();
