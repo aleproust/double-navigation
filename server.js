@@ -1,6 +1,6 @@
 var server_port = process.env.PORT || 8082
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
-var server_baseurl = "https://double-navigation.herokuapp.com/";
+var server_baseurl = "https://double-navigation.herokuapp.com";
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
