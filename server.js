@@ -1,6 +1,6 @@
 var server_port = process.env.PORT || 8082
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
-var server_baseurl = "https://double-navigation.herokuapp.com";
+var server_baseurl = server_port === 8082 ? `http://localhost:${server_port}` : "https://double-navigation.herokuapp.com";
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -22,7 +22,7 @@ app.get('/mobile', function(req, res){
 });
 
 io.on('connection', function(socket){
-  // When TV ask for à new QR Code
+  // When Console ask for à new QR Code
   socket.on('tv-get-qr', function(msg){
     var r = randomString(20);
     var connection = {
